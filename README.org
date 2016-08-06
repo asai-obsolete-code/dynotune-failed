@@ -1,7 +1,7 @@
 
 * Dynotune - Hub for performance measurement
 
-Work in progress.
+Idea level. +Work in progress.+ +alpha+ +beta+
 
 ** Purpose
 
