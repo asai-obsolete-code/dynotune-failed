@@ -23,7 +23,8 @@ The design of the whole framework will be similar to [[http://benchmarksgame.ali
 end-to-end performance. This is important in order to evaluate the performance across various Common
 Lisp implementations.
 
-It also accepts submissions in other languages, such as C or C++. API is defined in shell-script basis.
+It also accepts submissions in other languages, such as C or C++. API is defined in shell-script
+basis. It is still for lispers though. (I don't want to pay large EC2 money!)
 
 ** Notes
 
