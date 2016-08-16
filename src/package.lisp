@@ -9,3 +9,14 @@
 (in-package :dynotune)
 
 ;; blah blah blah.
+
+(defclass implementation () ())
+(define-namespace implementation)
+
+(defclass experiment () ())
+(define-namespace experiment)
+
+(defgeneric run (implementation input))
+(defgeneric verify (experiment output))
+(defgeneric bench (experiment implementation))
+(defgeneric generate-input (experiment))
