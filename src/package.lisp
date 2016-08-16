@@ -5,7 +5,7 @@
 
 (in-package :cl-user)
 (defpackage dynotune
-  (:use :cl :iterate :alexandria))
+  (:use :cl :iterate :alexandria :lispn))
 (in-package :dynotune)
 
 ;; blah blah blah.
