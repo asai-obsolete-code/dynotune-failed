@@ -8,7 +8,7 @@
   (:use :cl :iterate :alexandria :lispn))
 (in-package :dynotune)
 
-;; blah blah blah.
+;; generic functions
 
 (defclass implementation () ())
 (define-namespace implementation)
@@ -19,4 +19,4 @@
 (defgeneric run (implementation input))
 (defgeneric verify (experiment output))
 (defgeneric bench (experiment implementation))
-(defgeneric generate-input (experiment))
+

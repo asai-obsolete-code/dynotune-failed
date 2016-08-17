@@ -25,6 +25,6 @@
   :depends-on (:iterate :alexandria :lisp-namespace)
   :components ((:module "src"
                 :components
-                ((:file "package"))))
+                ((:file "0-package"))))
   :description "Implementation-independent Framework for performance measurement"
   :in-order-to ((test-op (test-op :dynotune.test))))
