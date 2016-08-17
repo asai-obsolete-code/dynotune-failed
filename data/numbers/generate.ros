@@ -1,0 +1,28 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  )
+
+(defpackage :ros.script.generate.3680406447
+  (:use :cl))
+(in-package :ros.script.generate.3680406447)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (loop for i in '(1e3 1e4 1e5)
+        and size in '(small medium large)
+        do
+     (with-open-file (s (string-downcase
+                         (format nil "~a" size))
+                        :direction :output
+                        :if-exists :supersede
+                        :if-does-not-exist :create)
+       (loop repeat i
+             do
+          (princ (random MOST-POSITIVE-FIXNUM) s)
+          (terpri s)))))
+
+;;; vim: set ft=lisp lisp:
