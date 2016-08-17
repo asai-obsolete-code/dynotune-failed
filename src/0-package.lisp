@@ -11,12 +11,14 @@
 ;; generic functions
 
 (defclass implementation () ())
-(define-namespace implementation)
 
-(defclass experiment () ())
-(define-namespace experiment)
+(defclass experiment ()
+     ((input :accessor input :initarg :input)))
 
-(defgeneric run (implementation input))
-(defgeneric verify (experiment output))
-(defgeneric bench (experiment implementation))
-
+(defgeneric benchmark (experiment implementation)
+  (:documentation "Using the input stored in the experiment, run the experiment using the implementation,
+measure the performance and verify the output."))
+(defgeneric verify (experiment output)
+  (:documentation "Verify the output of the experiment."))
+(defgeneric run (experiment implementation)
+  (:documentation "run the experiment using an implementation."))
