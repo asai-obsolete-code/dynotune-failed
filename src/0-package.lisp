@@ -13,12 +13,32 @@
 (defclass implementation () ())
 
 (defclass experiment ()
-     ((input :accessor input :initarg :input)))
+     ((input :reader input)
+      (output :accessor output))
+  (:documentation ""))
 
-(defgeneric benchmark (experiment implementation)
-  (:documentation "Using the input stored in the experiment, run the experiment using the implementation,
-measure the performance and verify the output."))
-(defgeneric verify (experiment output)
-  (:documentation "Verify the output of the experiment."))
+(defgeneric measure (experiment implementation)
+  (:documentation "Wrap RUN to measure the performance and VERIFY the output.")
+  (:method (experiment implementation)
+    (with-slots (output) experiment
+       (setf output (run experiment implementation))))
+  (:method :around (experiment implementation)
+    (let ((result (call-next-method)))
+      (if (verify experiment)
+          result
+          (error "invalid results! ~a" experiment)))))
+
 (defgeneric run (experiment implementation)
-  (:documentation "run the experiment using an implementation."))
+  (:documentation "Run the experiment using an implementation.
+Returns an output."))
+
+(defgeneric verify (experiment)
+  (:documentation
+   "Verify the output of the experiment. Returns a boolean indicating success or failure.")
+  (:method (experiment)
+    (declare (ignore experiment))
+    t))
+
+
+
+

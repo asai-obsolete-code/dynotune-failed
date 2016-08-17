@@ -1,0 +1,26 @@
+
++ associative
+  + set
+  + multiset
+  + map
+  + multimap
+  + sequence
+    + <array>
+    + <vector>
+    + <deque>
+    + <forward_list>
+    + <list>
+
+|           |             | unique per key | multi per key      |
+|-----------+-------------+----------------+--------------------|
+| ordered   | key=vlaue   | set            | multiset           |
+|           | <key,value> | map            | multimap           |
+| unordered | key=vlaue   | unordered-set  | unordered-multiset |
+|           | <key,value> | unordered-map  | unordered-multimap |
+|-----------+-------------+----------------+--------------------|
+
+
+combinatorial
+
+text
+

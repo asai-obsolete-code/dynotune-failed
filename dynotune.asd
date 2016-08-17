@@ -22,7 +22,7 @@
   :author "Masataro Asai"
   :mailto "guicho2.71828@gmail.com"
   :license "LLGPL"
-  :depends-on (:iterate :alexandria)
+  :depends-on (:iterate :alexandria :closer-mop :cl-csv)
   :components ((:module "src"
                 :components
                 ((:file "0-package"))))
