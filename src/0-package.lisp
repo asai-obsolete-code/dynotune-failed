@@ -5,7 +5,7 @@
 
 (in-package :cl-user)
 (defpackage dynotune
-  (:use :cl :iterate :alexandria :lispn))
+  (:use :cl :iterate :alexandria))
 (in-package :dynotune)
 
 ;; generic functions
