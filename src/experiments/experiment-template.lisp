@@ -3,6 +3,5 @@
 (defclass -experiment (space-time-experiment) ())
 
 (defmethod verify ((experiment -experiment))
-  (match experiment
-    ((experiment output)
-     (typep output 'array))))
+  (with-slots (output) experiment
+     (typep output 'array)))
