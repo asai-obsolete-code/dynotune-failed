@@ -33,18 +33,14 @@ submitted by the user. Competition!
 
 ** Design Sketch
 
-The design of the whole framework will be similar to [[http://benchmarksgame.alioth.debian.org/][Computer Language Benchmarks Game]].  It measures the
-end-to-end performance. This is important in order to evaluate the performance across various Common
-Lisp implementations.
+API is defined in shell-script basis.
+Input is through a file, output is through the standard output.
 
-It also accepts submissions in other languages, such as C or C++. API is defined in shell-script basis. It is
-still for lispers though. (I don't want to pay large EC2 money!)
+It also accepts submissions in other languages, such as C or C++.
 
 Submission is done by a pull-request.
-For implemention based on lisp, they should be written in [[https://github.com/roswell/roswell][roswell]] script.
-For other languages, they should include a simple makefile and a source code.
-
-Input and the output is done through a file or a pipe.
+For implementions based on lisp, they should be written in [[https://github.com/roswell/roswell][roswell]] scripts.
+For other languages, each implementation should include a simple makefile and a source code.
 
 ** Dependencies
 
