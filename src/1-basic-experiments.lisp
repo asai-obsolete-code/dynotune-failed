@@ -1,18 +1,18 @@
 
 (in-package :dynotune)
 
-(defclass time-mixin (experiment) ())
+(defclass time-experiment (experiment) ())
 
-(defmethod measure :around ((experiment time-mixin) implementation)
+(defmethod measure :around ((experiment time-experiment) implementation)
   (let ((start (get-internal-run-time))
         (other-measures (call-next-method))
         (end (get-internal-run-time)))
     (list* :time (/ (- end start) internal-time-units-per-second)
            other-measures)))
 
-(defclass space-mixin (experiment) ())
+(defclass space-experiment (experiment) ())
 
-(defmethod measure :around ((experiment space-mixin) implementation)
+(defmethod measure :around ((experiment space-experiment) implementation)
   (gc :full t)
   (let ((start-rss (get-rss))
         (other-measures (call-next-method)) ; sb-ext:without-gcing ?
@@ -23,8 +23,8 @@
              :space (- clean-rss start-rss)
              other-measures))))
 
-(defclass space-time-experiment (time-mixin
-                                 space-mixin)
+(defclass space-time-experiment (time-experiment
+                                 space-experiment)
      ())
 
 (defun get-rss ()
@@ -42,12 +42,12 @@
 
 
 
-(defclass input-from-file-mixin (experiment)
+(defclass input-from-file-experiment (experiment)
      ((input-pathname :reader input-pathname :initarg :input-pathname)))
 
-(defclass input-from-csv-mixin (input-from-file-mixin) ())
+(defclass input-from-csv-experiment (input-from-file-experiment) ())
 
-(defmethod initialize-instance :after ((o input-from-csv-mixin))
+(defmethod initialize-instance :after ((o input-from-csv-experiment))
   (setf (slot-value o 'input)
         (let* ((table (with-open-file (s (input-pathname o))
                         (cl-csv:read-csv s)))
@@ -55,9 +55,9 @@
                (cols (reduce #'max table :key #'length)))
           (make-array (list rows cols) :initial-contents table))))
 
-(defclass input-from-lines-mixin (input-from-file-mixin) ())
+(defclass input-from-lines-experiment (input-from-file-experiment) ())
 
-(defmethod initialize-instance :after ((o input-from-csv-mixin))
+(defmethod initialize-instance :after ((o input-from-csv-experiment))
   (setf (slot-value o 'input)
         (iter (for obj in-file (input-pathname o))
               (collect obj result-type vector))))
