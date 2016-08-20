@@ -1,7 +1,7 @@
 
 * Dynotune - Hub for performance measurement
 
-Idea level. +Work in progress.+ +alpha+ +beta+
++Idea level.+ Work in progress. +alpha+ +beta+
 
 ** Purpose
 
@@ -17,19 +17,22 @@ library is implemented. This framework measures the actual time and space comple
 same computing environment. It defines a set of benchmark suite (data), and the interfaces to libraries are
 submitted by the user. Competition!
 
+** Notes
+
+*Flexibility but not extensibility.* : In this documentation Flexibility is different from extensibility. An instance of flexibility
+is the customizable sorting function in merge sort. An instance of extensibility is extending Binary tree
+implementation to Red-black-tree using CLOS.
+
+
+
 ** Design Sketch
 
 The design of the whole framework will be similar to [[http://benchmarksgame.alioth.debian.org/][Computer Language Benchmarks Game]].  It measures the
 end-to-end performance. This is important in order to evaluate the performance across various Common
 Lisp implementations.
-
 It also accepts submissions in other languages, such as C or C++. API is defined in shell-script
 basis. It is still for lispers though. (I don't want to pay large EC2 money!)
-
-** Notes
-
-*Flexibility but not extensibility.* : Flexibility is different from extensibility. An instance of flexibility
-is the customizable sorting function in merge sort.
+Submission is done by a pull-request.
 
 
 ** Dependencies
