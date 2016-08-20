@@ -7,7 +7,8 @@
 (defpackage dynotune
   (:use :cl :iterate :alexandria :trivial-garbage)
   (:export
-   #:with-measurement))
+   #:with-measurement
+   #:collect-data))
 (in-package :dynotune)
 
 

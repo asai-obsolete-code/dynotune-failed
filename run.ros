@@ -1,0 +1,16 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ql:quickload :dynotune :silent t))
+
+(defpackage :ros.script.run.3680715861
+  (:use :cl :dynotune))
+(in-package :ros.script.run.3680715861)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (dynotune:collect-data))
+;;; vim: set ft=lisp lisp:
