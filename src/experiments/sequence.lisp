@@ -1,22 +1,41 @@
 
 (in-package :dynotune)
 
-;; no efficiency problem here
+(defclass sequence-experiment (space-time-experiment input-from-lines-experiment) ())
 
-(defclass sequence-experiment (space-time-experiment) ())
+(defclass sequence-pop-experiment (sequence-experiment) ())
+(defclass sequence-push-experiment (sequence-experiment) ())
+(defclass sequence-access-experiment (sequence-experiment) ())
 
-(dolist (where '(front back random))
-  (dolist (how '(push pop))
-    (dolist (on '(small medium large))
-      (let ((name (symbolicate where '- how '-experiment- on)))
-        (eval `(defclass ,name
-                    (sequence-experiment ,(symbolicate 'numbers- on))
-                    ()))))))
+;; push
 
-(dolist (how '(forward-sequencial backward-sequencial random))
-  (dolist (on '(small medium large))
-    (eval `(defclass ,(symbolicate how '-access-experiment- on)
-                (sequence-experiment ,(symbolicate 'numbers- on))
-                ()))))
+(defclass front-push-experiment (sequence-push-experiment) ()
+  (:documentation "construct LIFO queue"))
+(defclass back-push-experiment (sequence-push-experiment) ()
+  (:documentation "construct FIFO queue"))
+(defclass random-push-experiment (randomized-experiment sequence-push-experiment) ()
+  (:documentation "Double the length of the sequence by inserting NIL to random positions."))
+
+
+(defclass front-access-experiment (sequence-access-experiment) ()
+  (:documentation "iterate over LIFO queue"))
+(defclass front-pop-experiment (sequence-pop-experiment) ()
+  (:documentation "consume LIFO queue"))
+
+;; pop
+
+
+(defclass back-access-experiment (sequence-access-experiment) ()
+  (:documentation "iterate over FIFO queue"))
+(defclass back-pop-experiment (sequence-pop-experiment) ()
+  (:documentation "consume FIFO queue"))
+
+;; access
+
+
+(defclass random-access-experiment (randomized-experiment sequence-access-experiment) ()
+  (:documentation "Access random positions"))
+(defclass random-pop-experiment (randomized-experiment sequence-pop-experiment) ()
+  (:documentation "Halve the length of the sequence by popping elements in random positions"))
 
 
