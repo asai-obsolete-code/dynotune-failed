@@ -1,39 +1,50 @@
 
-* Dynotune - Hub for performance measurement
+* Dynotune - Hub for library evaluation
 
 +Idea level.+ Work in progress. +alpha+ +beta+
 
 ** Purpose
 
-*Data structure availability in common lisp is low* : Due to the scarsity of reliable, fast container library,
-Common Lisp suffers from its inclination to list structure. While the so-called "library problem" is largely
-resolved by quicklisp, I believe the data structure availability in common lisp is low, rather than “too
-high” as in application tools such as web server, databases, GUI.
+*Data structure availability in common lisp is still low* although the so-called "library problem" is largely
+resolved by quicklisp. One reason is that there is no standardized way to evaluate a library: One can claim it
+to be fast, but it is not easy to verify it in most cases.
 
-*Data structure is all about performance.* : Extensibility is not the core value. Users do not care how the
-library is implemented. This framework measures the actual time and space complexity.
+*Performance, Scalability, Quality.* :
+Performance includes low-level optimization.
+Scalability is not necessarily the synonym of performance, since there is a tradeoff.
+Quality represents the quality of API, documentation, design and cleanness of the implementation of the library.
+(These are highly subjective, but still worth an evaluation.)
 
-*This is a hub, rather than a library.* : This framework is going to evaluate each library performance in the
-same computing environment. It defines a set of benchmark suite (data), and the interfaces to libraries are
+*Hub, rather than a library?* : This framework is going to evaluate each library performance in the same
+computing environment. It defines a set of benchmark suite (data), and the interfaces to libraries are
 submitted by the user. Competition!
 
-** Notes
-
-*Flexibility but not extensibility.* : In this documentation Flexibility is different from extensibility. An instance of flexibility
-is the customizable sorting function in merge sort. An instance of extensibility is extending Binary tree
-implementation to Red-black-tree using CLOS.
-
-
+# ** Notes
+# 
+# *Flexibility but not extensibility.* : 
+# 
+# Extensibility is not the core value. Users do not care how the
+# library is implemented. This framework measures the actual time and space complexity.
+# 
+# 
+# In this documentation Flexibility is different from extensibility. An instance of flexibility
+# is the customizable sorting function in merge sort. An instance of extensibility is extending Binary tree
+# implementation to Red-black-tree using CLOS.
 
 ** Design Sketch
 
 The design of the whole framework will be similar to [[http://benchmarksgame.alioth.debian.org/][Computer Language Benchmarks Game]].  It measures the
 end-to-end performance. This is important in order to evaluate the performance across various Common
 Lisp implementations.
-It also accepts submissions in other languages, such as C or C++. API is defined in shell-script
-basis. It is still for lispers though. (I don't want to pay large EC2 money!)
-Submission is done by a pull-request.
 
+It also accepts submissions in other languages, such as C or C++. API is defined in shell-script basis. It is
+still for lispers though. (I don't want to pay large EC2 money!)
+
+Submission is done by a pull-request.
+For implemention based on lisp, they should be written in [[https://github.com/roswell/roswell][roswell]] script.
+For other languages, they should include a simple makefile and a source code.
+
+Input and the output is done through a file or a pipe.
 
 ** Dependencies
 
