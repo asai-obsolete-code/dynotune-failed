@@ -1,0 +1,92 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ql:quickload '(:iterate :alexandria :trivial-garbage) :silent t))
+
+(defpackage :ros.script.list.3680703943
+  (:use :cl :iterate :alexandria :trivial-garbage))
+
+(in-package :ros.script.list.3680703943)
+
+#+sbcl
+(declaim (sb-ext:muffle-conditions style-warning))
+
+(defmacro with-measurement ((&whole keys &key name &allow-other-keys) &body body)
+  (with-gensyms (next)
+    `(call-with-measurement (lambda (,next) (declare (ignorable ,next)) ,@body)
+                            :name ',name)))
+
+(defun connect (&rest functions)
+  (when functions
+    (funcall (first functions)
+             (lambda ()
+               (apply #'connect (rest functions))))))
+
+(defun call-with-measurement (fn &key name &allow-other-keys)
+  (print
+   (connect (lambda (next)
+              (list* :name name (funcall next)))
+            (lambda (next)
+              (gc :full t)
+              (let ((start-rss (get-rss))
+                    (other-measures (funcall next)) ; sb-ext:without-gcing ?
+                    (dirty-rss (get-rss)))
+                (gc :full t)
+                (let ((clean-rss (get-rss)))
+                  (list* :temporary-space (- dirty-rss start-rss)
+                         :space (- clean-rss start-rss)
+                         other-measures))))
+            (lambda (next)
+              (let ((start (get-internal-run-time))
+                    (other-measures (funcall next))
+                    (end (get-internal-run-time)))
+                (list* :time (float (/ (- end start) internal-time-units-per-second))
+                       other-measures)))
+            fn)))
+
+(defun get-rss ()
+  #+ccl
+  (let ((sum 0))
+    (ccl:map-heap-objects (lambda (obj)
+                            (incf sum (ccl:object-direct-size obj)))
+                          :dynamic)
+    sum)
+  #+sbcl
+  (sb-ext:get-bytes-consed)
+  ;; we can torelate small amount of consing as documented in GET-BYTES-CONSED
+  )
+
+(defun main (input &rest argv)
+  (declare (ignorable argv))
+  (let* ((a (iter (for num in-file input)
+                  (collect num result-type vector)))
+         (len (length a)))
+    (let (acc)
+      (with-measurement (:name push-front)
+        (dotimes (i len)
+          (push (aref a i) acc)))
+      (with-measurement (:name pop-front)
+        (dotimes (i len)
+          (pop acc))))
+    (let (acc)
+      (with-measurement (:name push-back)
+        (dotimes (i len)
+          (if (null acc)
+              (setf acc (cons (aref a i) nil))
+              (setf (cdr (last acc)) (cons (aref a i) nil)))))
+      (with-measurement (:name pop-back)
+        (dotimes (i len)
+          (setf (cdr (last acc 2)) nil))))
+    (let ((acc (make-list len)))
+      (with-measurement (:name push-random)
+        (dotimes (i len)
+          (push (aref a i) (nthcdr i acc))))
+      (with-measurement (:name pop-random)
+        (dotimes (i len)
+          (pop (nthcdr i acc))))))
+  (terpri))
+
+;;; vim: set ft=lisp lisp:
