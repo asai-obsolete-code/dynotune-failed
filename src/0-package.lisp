@@ -5,47 +5,54 @@
 
 (in-package :cl-user)
 (defpackage dynotune
-  (:use :cl :iterate :alexandria))
+  (:use :cl :iterate :alexandria :trivial-garbage)
+  (:export
+   #:with-measurement))
 (in-package :dynotune)
 
-;; generic functions
+(defmacro with-measurement ((&whole keys &key name &allow-other-keys) &body body)
+  (with-gensyms (next)
+    `(call-with-measurement (lambda (,next) (declare (ignorable ,next)) ,@body)
+                            :name ',name)))
 
-(defclass implementation () ())
+(defun connect (&rest functions)
+  (when functions
+    (funcall (first functions)
+             (lambda ()
+               (apply #'connect (rest functions))))))
 
-(defclass experiment ()
-     ((input :reader input)
-      (output :accessor output))
-  (:documentation ""))
+(defun call-with-measurement (fn &key name &allow-other-keys)
+  (prin1
+   (connect (lambda (next)
+              (list* :name name (funcall next)))
+            (lambda (next)
+              (gc :full t)
+              (let ((start-rss (get-rss))
+                    (other-measures (funcall next)) ; sb-ext:without-gcing ?
+                    (dirty-rss (get-rss)))
+                (gc :full t)
+                (let ((clean-rss (get-rss)))
+                  (list* :temporary-space (- dirty-rss start-rss)
+                         :space (- clean-rss start-rss)
+                         other-measures))))
+            (lambda (next)
+              (let ((start (get-internal-run-time))
+                    (other-measures (funcall next))
+                    (end (get-internal-run-time)))
+                (list* :time (float (/ (- end start) internal-time-units-per-second))
+                       other-measures)))
+            fn))
+  (terpri))
 
-(defgeneric measure (experiment implementation)
-  (:documentation "Wrap RUN to measure the performance.")
-  (:method ((e experiment) implementation)
-    (with-slots (output) e
-       (setf output (run e implementation)))))
+(defun get-rss ()
+  #+ccl
+  (let ((sum 0))
+    (ccl:map-heap-objects (lambda (obj)
+                            (incf sum (ccl:object-direct-size obj)))
+                          :dynamic)
+    sum)
+  #+sbcl
+  (sb-ext:get-bytes-consed)
+  ;; we can torelate small amount of consing as documented in GET-BYTES-CONSED
+  )
 
-(defgeneric prepare (experiment implementation)
-  (:documentation "Prepare the input for the experiment.
-Preprocessing phase of the experiment that should be excluded from the benchmark should be here
- rather than in RUN.")
-  (:method (e i)
-    (declare (ignorable e i))))
-
-(defgeneric run (experiment implementation)
-  (:documentation "Run the experiment using an implementation.
-Returns an output.")
-  (:method (e i)
-    (format *error-output* "benchmark for ~a and ~a is not implemented yet." e i)))
-
-(defgeneric verify (experiment)
-  (:documentation
-   "Verify the output of the experiment. Returns a boolean indicating success or failure.")
-  (:method (experiment)
-    (declare (ignore experiment))
-    t))
-
-(defun benchmark (experiment implementation)
-  (prepare experiment implementation)
-  (let ((result (measure experiment implementation)))
-    (if (verify experiment)
-        result
-        (error "invalid results! ~a" experiment))))
