@@ -8,7 +8,7 @@
   (:use :cl :iterate :alexandria :trivial-garbage)
   (:export
    #:with-measurement
-   #:collect-data))
+   #:runners))
 (in-package :dynotune)
 
 

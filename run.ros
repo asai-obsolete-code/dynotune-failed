@@ -10,7 +10,10 @@ exec ros -Q -- $0 "$@"
   (:use :cl :dynotune))
 (in-package :ros.script.run.3680715861)
 
-(defun main (&rest argv)
+(defun main (input &rest argv)
   (declare (ignorable argv))
-  (dynotune:collect-data))
+  (mapcar (lambda (fn)
+            (print (funcall fn input)))
+          (dynotune:runners))
+  (fresh-line))
 ;;; vim: set ft=lisp lisp:

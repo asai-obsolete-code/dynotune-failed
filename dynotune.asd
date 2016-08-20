@@ -12,7 +12,8 @@
  :license "LLGPL"
  :depends-on (:iterate
               :alexandria
-              :trivial-garbage)
+              :trivial-garbage
+              :trivia.ppcre)
  :components ((:file "src/0-package")
               (:file "src/1-find-main")
               (:file "src/1-measurement")

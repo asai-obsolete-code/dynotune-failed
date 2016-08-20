@@ -1,14 +1,16 @@
 (in-package :dynotune)
 
-(defmacro with-measurement ((&whole keys &key name &allow-other-keys) &body body)
+(defmacro with-measurement ((&whole keys &key name input &allow-other-keys) &body body)
   (with-gensyms (next)
     `(call-with-measurement (lambda (,next) (declare (ignorable ,next)) ,@body)
-                            :name ',name)))
+                            :pathname (enough-namestring *load-pathname*)
+                            :name ',name
+                            :input (enough-namestring ,input))))
 
-(defun call-with-measurement (fn &key name &allow-other-keys)
+(defun call-with-measurement (fn &rest keys &key &allow-other-keys)
   (prin1
    (connect (lambda (next)
-              (list* :name name (funcall next)))
+              (append keys (funcall next)))
             (lambda (next)
               (gc :full t :verbose t)
               (let ((start-rss (get-rss))
