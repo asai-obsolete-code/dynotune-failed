@@ -1,0 +1,73 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ql:quickload '(:dynotune :iterate :alexandria) :silent t))
+
+(defpackage :ros.script.list.3680703943
+  (:use :cl :dynotune :iterate :alexandria))
+
+(in-package :ros.script.list.3680703943)
+
+#+sbcl
+(declaim (sb-ext:muffle-conditions style-warning))
+
+(defstruct last-list list last)
+
+(defmacro push-last-list-front (thing last-list)
+  (with-gensyms (list last)
+    (once-only (last-list thing)
+      `(with-slots (list last) ,last-list
+          (when (prog1 (null list) (push ,thing list))
+            (setf last list))
+          ,last-list))))
+
+(defmacro push-last-list-back (thing last-list)
+  (with-gensyms (list last)
+    (once-only (last-list thing)
+      `(with-slots (list last) ,last-list
+          (if list
+              (setf (cdr last) (cons ,thing nil)
+                    last (cdr last))
+              (setf list (cons ,thing nil)
+                    last list))
+          ,last-list))))
+
+(defmacro pop-last-list-front (last-list)
+  (with-gensyms (list last)
+    `(with-slots (list last) ,last-list
+        (prog1
+          (pop list)
+          (when (null list)
+            (setf last nil))))))
+
+(defmacro pop-last-list-back (last-list)
+  (with-gensyms (list last)
+    `(with-slots (list last) ,last-list
+        (setf last (last list 2))
+        (prog1 (cadr last)
+               (setf (cdr last) nil)))))
+
+(defun main (input &rest argv)
+  (declare (ignorable argv))
+  (let* ((a (iter (for num in-file input)
+                  (collect num result-type vector)))
+         (len (length a)))
+    (let ((ll (make-last-list)))
+      (with-measurement (:name push-front)
+        (dotimes (i len)
+          (push-last-list-front (aref a i) ll)))
+      (with-measurement (:name pop-front)
+        (dotimes (i len)
+          (pop-last-list-front ll))))
+    (let ((ll (make-last-list)))
+      (with-measurement (:name push-back)
+        (dotimes (i len)
+          (push-last-list-back (aref a i) ll)))
+      (with-measurement (:name pop-back)
+        (dotimes (i len)
+          (pop-last-list-back ll))))))
+
+;;; vim: set ft=lisp lisp:
