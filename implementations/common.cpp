@@ -1,15 +1,21 @@
 
-#include "../../common.h"
+#include "common.h"
+
+using namespace std;
 
 int main (int argc, char* argv[]) {
-    ifstream f(argv[1]);
+    string input = argv[1];
+    ifstream f(input);
 
     long int x;
-    std::vector<long int> v;
+    vector<long int> v;
     while (f >> x) {
-        v.push_back(v);
+        v.push_back(x);
     }
-    main2(v);
+    for (auto e : main2(v)){
+        e[":input"] = "\""+input+"\"";
+        cout << e << endl;
+    }
     return 0;
 }
 
