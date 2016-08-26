@@ -1,0 +1,34 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#| <Put a one-line description here>
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ql:quickload '(:dynotune :iterate) :silent t))
+
+(defpackage :ros.script.list.3680703943
+  (:use :cl :dynotune :iterate))
+
+(in-package :ros.script.list.3680703943)
+
+#+sbcl
+(declaim (sb-ext:muffle-conditions style-warning))
+
+(defun main (input &rest argv)
+  (declare (ignorable argv))
+  (let* ((a (iter (for num in-file input)
+                  (collect num result-type vector)))
+         (len (length a)))
+    (let ((acc (make-array 1 :adjustable t :fill-pointer 0)))
+      (with-measurement (:input input :name :push-back)
+        (dotimes (i len)
+          (vector-push-extend (aref a i) acc (max 1 (length acc)))))
+      (with-measurement (:input input :name :pop-back)
+        (dotimes (i len)
+          (vector-pop acc))))
+    (let ((acc (make-array len :adjustable t :fill-pointer len)))
+      (with-measurement (:input input :name :access-random)
+        (dotimes (i len)
+          (aref acc i))))))
+
+;;; vim: set ft=lisp lisp:
