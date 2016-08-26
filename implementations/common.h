@@ -71,3 +71,4 @@ std::ostream &operator<<(std::ostream &o, const std::unordered_map<T,T2>& v){
 // std::map <string,string> measure(vector<long int> input);
 std::vector<Result> main2(std::vector<long int> input);
 
+double process_mem_usage();
