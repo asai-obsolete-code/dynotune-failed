@@ -16,12 +16,14 @@ vector<Result> main2 (vector<long int> input) {
     results.push_back(
         measure ([&](){
                 for (auto i : input){
-                    sequence.push_front(i);}}));
+                    sequence.push_front(i);
+                }}));
 
     results.push_back(
         measure ([&](){
                 for (auto i : input){
-                    sequence.pop_front();}}));
+                    sequence.pop_front();
+                }}));
     return results;
 }
 
