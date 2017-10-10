@@ -1,7 +1,9 @@
 
 * Dynotune - Hub for library evaluation
 
-+Idea level.+ Work in progress. +alpha+ +beta+
++Idea level.+ +Work in progress.+ +alpha+ +beta+ *Abandoned*.
+
+I want to reuse the same library name for a different purpose, so this project is abandoned.
 
 ** Purpose
 
